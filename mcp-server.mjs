@@ -29,11 +29,6 @@ function processFilePatterns(files = '') {
     patterns.push(...files.split(' ').filter(f => f.trim()));
   }
   
-  // Default fallback for broad analysis
-  if (patterns.length === 0) {
-    patterns.push('@src/', '@package.json');
-  }
-  
   return [...new Set(patterns)]; // Remove duplicates
 }
 
@@ -159,23 +154,30 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         name: 'analyze_with_gemini',
         description: `Use Gemini's massive context window for comprehensive codebase analysis.
 
-APPROACH:
-If you're unfamiliar with the codebase, explore its structure first using tools like Glob, LS, or Read to understand the project organization. Then select relevant files for focused analysis.
+DISCOVERY-FIRST APPROACH:
+Before using this tool, explore the codebase structure using tools like Glob, LS, or Read to understand what exists. Every project is unique - let your exploration guide your analysis strategy.
 
 INTELLIGENT FILE SELECTION:
-- Understand the codebase structure before analyzing
-- Select files that are relevant to your analysis goal
+- Start by understanding: What type of project is this? What files exist?
+- Choose patterns that match the actual structure you discovered
 - Include related files that provide necessary context
-- Consider configuration, tests, and documentation
-- Use broad patterns (@src/) for discovery, specific files for focused analysis
+- Consider configuration, tests, documentation based on what you found
+- Use broad patterns for discovery, specific files for focused analysis
+
+EXAMPLES OF EXPLORATION-GUIDED PATTERNS:
+- Python project: @**/*.py @requirements.txt @pyproject.toml
+- Go project: @**/*.go @go.mod @go.sum  
+- Rust project: @src/**/*.rs @Cargo.toml
+- Web project: @src/ @package.json @tsconfig.json
+- Documentation: @README.md @docs/ @**/*.md
 
 METACOGNITIVE FEATURES:
-- Automatically assesses task complexity and scope
-- Enhances prompts with context-aware guidance  
+- Assesses task complexity based on your file selection
+- Enhances prompts with context-aware guidance
 - Provides reflection on analysis insights and next steps
 - Leverages Gemini's large context for cross-file pattern recognition
 
-Let your understanding of the codebase guide your file selection.`,
+Trust your understanding of the codebase to guide intelligent file selection.`,
         
         inputSchema: {
           type: 'object',
@@ -186,7 +188,7 @@ Let your understanding of the codebase guide your file selection.`,
             },
             files: {
               type: 'string',
-              description: 'File patterns like "@src/ @package.json" or specific paths. Leave empty for broad analysis using @src/ @package.json defaults.'
+              description: 'File patterns based on your exploration. Examples: "@**/*.py @requirements.txt" for Python, "@src/ @package.json" for Node.js, "@**/*.rs @Cargo.toml" for Rust. Explore the project structure first to choose meaningful patterns.'
             },
             template: {
               type: 'string',
@@ -213,6 +215,37 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       
       // Process file patterns from user input
       const patterns = processFilePatterns(files);
+      
+      // Guide agent to explore if no patterns provided
+      if (patterns.length === 0) {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `# File Exploration Needed
+
+No file patterns specified. To use Gemini's massive context effectively, first explore the codebase structure:
+
+## Recommended exploration steps:
+1. **Understand the project**: Use \`ls\` or \`Glob\` to see the top-level structure
+2. **Identify the project type**: Look for language-specific files (package.json, Cargo.toml, requirements.txt, etc.)
+3. **Choose meaningful patterns**: Based on what you found, select relevant file patterns
+
+## Example patterns by project type:
+- **Node.js/JavaScript**: \`@src/ @package.json @*.config.js\`
+- **Python**: \`@**/*.py @requirements.txt @pyproject.toml\`
+- **Rust**: \`@src/**/*.rs @Cargo.toml\`
+- **Go**: \`@**/*.go @go.mod\`
+- **Documentation**: \`@README.md @docs/ @**/*.md\`
+
+## Try again with specific patterns:
+\`analyze_with_gemini("${question}", "@appropriate/patterns @based/on/exploration")\`
+
+*This approach ensures more relevant and focused analysis results.*`
+            }
+          ]
+        };
+      }
       
       // Assess complexity and enhance prompt
       const complexity = assessComplexity(question, patterns.length);
