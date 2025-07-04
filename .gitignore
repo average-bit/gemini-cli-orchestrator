@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment variables (user-specific)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# User-specific configuration files
+.claude/settings.local.json
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.temp
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock

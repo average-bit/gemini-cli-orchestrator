@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__gemini-cli-orchestrator__analyze_with_gemini",
+      "mcp__gemini-cli-orchestrator__discover_files"
+    ],
+    "deny": []
+  },
+  "mcpServers": {
+    "gemini-cli-orchestrator": {
+      "command": "node",
+      "args": [
+        "/path/to/your/gemini-cli-orchestrator/mcp-server.mjs"
+      ]
+    }
+  }
+}
