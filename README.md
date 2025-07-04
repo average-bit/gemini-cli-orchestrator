@@ -2,6 +2,25 @@
 
 A lightweight CLI tool and MCP server enabling AI agents to perform deep codebase analysis with Gemini's massive context window.
 
+## 🚀 Getting Started
+
+**Step 1:** Install Gemini CLI
+```bash
+npm install -g @google/gemini-cli
+```
+
+**Step 2:** Install this tool
+```bash
+npm install
+```
+
+**Step 3:** Test it works
+```bash
+npm run analyze "What does this code do?"
+```
+
+That's it! Authentication happens automatically on first use.
+
 ## Two Ways to Use
 
 ### 🚀 MCP Server (Recommended for Agents)
@@ -137,17 +156,34 @@ npm run analyze "Are WebSocket hooks present?" @src/hooks/
 npm run analyze "Is dark mode implemented?" @src/ @styles/
 ```
 
-## Key Benefits
+## How It Works
 
-✅ **Ultra-lightweight**: 272-line CLI + 150-line MCP server  
-✅ **Universal compatibility**: Works with any MCP-enabled AI agent  
-✅ **Zero configuration**: Works immediately after Gemini CLI setup  
-✅ **Intelligent file discovery**: Smart pattern matching and context management
+The tool has two components:
+- **CLI Tool** (`gemini-direct.mjs`): Aggregates files using @ syntax and sends to Gemini CLI
+- **MCP Server** (`mcp-server.mjs`): Makes the CLI tool available to AI agents via standard protocol
+
+File patterns like `@src/` expand to include multiple files in a single Gemini analysis request.
 
 ## Requirements
 
 - Node.js 18+
 - Google Gemini CLI installed and authenticated (see setup below)
+
+## ⚡ Quick Setup Check
+
+```bash
+# 1. Check if Gemini CLI is installed
+gemini --version
+
+# 2. Test authentication (will prompt if needed)
+echo "Hello" | gemini
+
+# 3. Install this tool
+npm install
+
+# 4. Test the tool
+npm run analyze "What does this code do?"
+```
 
 ## Setup
 
@@ -160,10 +196,14 @@ npm install -g @google/gemini-cli
 
 ### 2. Authenticate with Google (OAuth - FREE)
 
+The Gemini CLI uses OAuth authentication. **No explicit auth command needed** - authentication happens automatically on first use.
+
 ```bash
-# Authenticate with your Google account - NO API key needed!
-gemini auth login
+# Test authentication (will prompt for login if needed)
+echo "Hello Gemini" | gemini
 ```
+
+**First Run:** If not authenticated, Gemini CLI will automatically open your browser for OAuth login.
 
 **What Gets Created:**
 ```
@@ -175,7 +215,7 @@ gemini auth login
 ```
 
 **How It Works:**
-1. **First time**: `gemini auth login` opens browser for OAuth
+1. **First time**: Any `gemini` command opens browser for OAuth
 2. **Subsequent calls**: Gemini CLI automatically uses stored tokens
 3. **Token refresh**: Happens automatically when needed
 4. **Your tool**: Inherits authentication from Gemini CLI
@@ -187,7 +227,7 @@ gemini auth login
 | **Windows** | `%USERPROFILE%\.gemini\` |
 | **Docker** | Mount host `~/.gemini/` as volume |
 
-**Important**: This uses FREE Google OAuth, not paid API access!
+Uses Google OAuth authentication (personal Google account).
 
 ### 3. Verify Authentication
 
@@ -225,11 +265,7 @@ const child = spawn(geminiPath, ['-m', 'gemini-2.5-flash'], {
 
 The Gemini CLI handles reading `~/.gemini/oauth_creds.json` automatically.
 
-**Distribution Benefits:**
-- **Users must authenticate once**: `gemini auth login`
-- **No secrets in your code**: Authentication is external
-- **Works across systems**: OAuth credentials are portable
-- **No configuration needed**: Your tool just works after auth
+Authentication is handled by the Gemini CLI, so the tool inherits existing credentials automatically.
 
 ## Troubleshooting
 
@@ -244,11 +280,11 @@ npm install -g @google/gemini-cli
 
 ### "Authentication failed"
 ```bash
-# Re-authenticate
-gemini auth login
+# Test authentication (will re-prompt if needed)
+echo "test" | gemini
 
-# Check auth status
-gemini auth status
+# If still failing, check if ~/.gemini/ directory exists
+ls -la ~/.gemini/
 ```
 
 ### "GEMINI_CLI_PATH not found"

@@ -92,9 +92,17 @@ Provide debugging strategies and fix recommendations.`
     return new Promise((resolve) => {
       const geminiPath = process.env.GEMINI_CLI_PATH || 'gemini';
       
+      // Ensure HOME is set for authentication file access
+      const env = { 
+        ...process.env,
+        HOME: process.env.HOME || require('os').homedir(),
+        PATH: process.env.PATH || '/usr/local/bin:/usr/bin:/bin'
+      };
+      
       const child = spawn(geminiPath, ['-m', 'gemini-2.5-flash'], {
         stdio: ['pipe', 'pipe', 'pipe'],
-        env: { ...process.env }
+        env: env,
+        shell: false
       });
 
       let stdout = '';
@@ -113,6 +121,7 @@ Provide debugging strategies and fix recommendations.`
         if (code === 0) {
           resolve({ success: true, content: stdout.trim() });
         } else {
+          console.error(`Gemini CLI stderr: ${stderr}`);
           resolve({ success: false, error: `Gemini failed (${code}): ${stderr}` });
         }
       });

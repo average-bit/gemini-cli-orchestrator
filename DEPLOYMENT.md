@@ -1,13 +1,13 @@
 # Deployment Guide
 
-## Problem Statement
+## What This Tool Does
 
-This tool solves a fundamental issue: AI agents have limited context windows but often need to analyze entire codebases. Traditional solutions either:
-1. Require manual file selection (inefficient)
-2. Build complex server architectures (over-engineered)
-3. Make assumptions about project structure (fragile)
+AI agents often need to analyze multiple files across a codebase, but have limited context windows. This tool:
 
-This tool provides both direct CLI usage and MCP integration for universal agent compatibility.
+1. Aggregates multiple files using glob patterns (`@src/`, `@**/*.js`)
+2. Sends the combined content to Gemini via its CLI
+3. Returns structured analysis results
+4. Provides MCP integration for agent discoverability
 
 ## Architecture
 
@@ -203,6 +203,78 @@ fi
 - Limited by Gemini API rate limits
 - File processing is I/O bound
 - Memory usage scales with file count/size
+
+## IDE-Specific Configurations
+
+### Windsurf IDE Configuration
+
+**Location:** `~/.codeium/windsurf/mcp_config.json`
+
+Add this configuration to your Windsurf MCP settings:
+
+```json
+{
+  "mcpServers": {
+    "gemini-cli-orchestrator": {
+      "command": "node", 
+      "args": ["/absolute/path/to/your/gemini-cli-orchestrator/mcp-server.mjs"],
+      "env": {}
+    }
+  }
+}
+```
+
+**Auto-Install Script for Windsurf:**
+```bash
+# Add to Windsurf MCP config
+CONFIG_FILE="$HOME/.codeium/windsurf/mcp_config.json"
+SERVER_PATH="$(pwd)/mcp-server.mjs"
+
+# Create config directory if it doesn't exist
+mkdir -p "$(dirname "$CONFIG_FILE")"
+
+# Add or update the configuration
+node -e "
+const fs = require('fs');
+const path = '$CONFIG_FILE';
+const serverPath = '$SERVER_PATH';
+
+let config = {};
+try {
+  config = JSON.parse(fs.readFileSync(path, 'utf8'));
+} catch (e) {
+  config = { mcpServers: {} };
+}
+
+config.mcpServers = config.mcpServers || {};
+config.mcpServers['gemini-cli-orchestrator'] = {
+  command: 'node',
+  args: [serverPath],
+  env: {}
+};
+
+fs.writeFileSync(path, JSON.stringify(config, null, 2));
+console.log('Windsurf MCP configuration updated');
+"
+```
+
+### Claude Code Configuration
+
+**Location:** `~/.claude/claude_desktop_config.json`
+
+Add this configuration to your Claude Desktop settings:
+
+```json
+{
+  "mcpServers": {
+    "gemini-cli-orchestrator": {
+      "command": "node",
+      "args": ["/absolute/path/to/your/gemini-cli-orchestrator/mcp-server.mjs"],
+      "env": {}
+    }
+  }
+}
+```
 
 ## Maintenance
 

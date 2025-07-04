@@ -246,6 +246,7 @@ ${result.output}
           }
         ]
       };
+    }
     
     throw new Error(`Unknown tool: ${name}`);
     
