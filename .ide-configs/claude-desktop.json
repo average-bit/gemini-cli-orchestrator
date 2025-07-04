@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "gemini-cli-orchestrator": {
+      "command": "node",
+      "args": ["/path/to/your/gemini-cli-orchestrator/mcp-server.mjs"]
+    }
+  }
+}

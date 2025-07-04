@@ -10,18 +10,19 @@ A lightweight CLI tool and MCP server enabling AI agents to perform deep codebas
 ```bash
 # Install dependencies
 npm install
-
-# Add to Claude Code CLI
-claude mcp add gemini-cli-orchestrator node /path/to/your/gemini-cli-orchestrator/mcp-server.mjs
 ```
 
-**Or add to `.claude/settings.local.json`:**
-```json
+## MCP Configuration by IDE
+
+### Claude Code CLI
+```bash
+# Quick setup
+claude mcp add gemini-cli-orchestrator node /path/to/your/gemini-cli-orchestrator/mcp-server.mjs
+
+# Or edit ~/.claude/settings.local.json:
 {
   "permissions": {
-    "allow": [
-      "mcp__gemini-cli-orchestrator__analyze_with_gemini"
-    ]
+    "allow": ["mcp__gemini-cli-orchestrator__analyze_with_gemini"]
   },
   "mcpServers": {
     "gemini-cli-orchestrator": {
@@ -32,8 +33,8 @@ claude mcp add gemini-cli-orchestrator node /path/to/your/gemini-cli-orchestrato
 }
 ```
 
-**For Claude Desktop:**
-Add to config file at:
+### Claude Desktop
+**Config file locations:**
 - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
 - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
 
@@ -41,12 +42,43 @@ Add to config file at:
 {
   "mcpServers": {
     "gemini-cli-orchestrator": {
-      "command": "node", 
+      "command": "node",
       "args": ["/path/to/your/gemini-cli-orchestrator/mcp-server.mjs"]
     }
   }
 }
 ```
+
+### Cursor IDE
+**Config file:** `.cursor/mcp.json` (project) or `~/.cursor/mcp.json` (global)
+
+```json
+{
+  "mcpServers": {
+    "gemini-cli-orchestrator": {
+      "command": "node",
+      "args": ["/path/to/your/gemini-cli-orchestrator/mcp-server.mjs"]
+    }
+  }
+}
+```
+
+### Windsurf IDE
+**Config file:** `~/.codeium/windsurf/mcp_config.json`
+
+```json
+{
+  "mcpServers": {
+    "gemini-cli-orchestrator": {
+      "command": "node",
+      "args": ["/path/to/your/gemini-cli-orchestrator/mcp-server.mjs"],
+      "disabled": false
+    }
+  }
+}
+```
+
+**📁 Quick Setup:** Copy example configs from `.ide-configs/` directory
 
 **Any agent can now use:**
 - `analyze_with_gemini("find security issues", "@src/auth/ @middleware/")` 
