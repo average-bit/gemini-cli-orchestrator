@@ -48,12 +48,17 @@ function assessComplexity(question, patternCount) {
 /**
  * Enhance prompt with context-aware guidance
  */
-function enhancePrompt(question, patterns, template) {
+function enhancePrompt(question, patterns, template, context = '') {
   let prompt = question;
   
-  // Add context about scope
+  // Add user-provided context first (most important)
+  if (context.trim()) {
+    prompt += `\n\nContext: ${context}`;
+  }
+  
+  // Add scope context about file patterns
   if (patterns.length > 5) {
-    prompt += `\n\nContext: This is a large-scale analysis across ${patterns.length} file patterns. Focus on high-level patterns and architectural insights that would be difficult to see with limited context.`;
+    prompt += `\n\nAnalysis Scope: This is a large-scale analysis across ${patterns.length} file patterns. Focus on high-level patterns and architectural insights that would be difficult to see with limited context.`;
   }
   
   // Add reflection guidance
@@ -171,24 +176,35 @@ EXAMPLES OF EXPLORATION-GUIDED PATTERNS:
 - Web project: @src/ @package.json @tsconfig.json
 - Documentation: @README.md @docs/ @**/*.md
 
+CRAFTING EFFECTIVE QUESTIONS FOR GEMINI:
+Gemini works best with specific, contextual questions. Consider including:
+- Your analysis goal: "I'm trying to understand X because Y"
+- Specific focus: "Focus on security vulnerabilities in authentication"
+- Output preference: "Provide specific examples with line numbers"
+- Domain context: "This is a React app with TypeScript"
+
 METACOGNITIVE FEATURES:
 - Assesses task complexity based on your file selection
 - Enhances prompts with context-aware guidance
 - Provides reflection on analysis insights and next steps
 - Leverages Gemini's large context for cross-file pattern recognition
 
-Trust your understanding of the codebase to guide intelligent file selection.`,
+Trust your understanding of the codebase to guide intelligent file selection and question crafting.`,
         
         inputSchema: {
           type: 'object',
           properties: {
             question: {
               type: 'string',
-              description: 'Natural language question or analysis request'
+              description: 'Your analysis question for Gemini. Make it specific and contextual. Good: "What security vulnerabilities exist in the authentication system?" Bad: "Analyze this code." Include your goal, specific focus, and desired output format for best results.'
             },
             files: {
               type: 'string',
               description: 'File patterns based on your exploration. Examples: "@**/*.py @requirements.txt" for Python, "@src/ @package.json" for Node.js, "@**/*.rs @Cargo.toml" for Rust. Explore the project structure first to choose meaningful patterns.'
+            },
+            context: {
+              type: 'string',
+              description: 'Optional: Provide context about your analysis goal, the project domain, your role, or what you\'re trying to achieve. This helps Gemini give more relevant, targeted responses. Example: "I\'m debugging a performance issue in a React app" or "I\'m doing a security review for a financial API".'
             },
             template: {
               type: 'string',
@@ -211,7 +227,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   
   try {
     if (name === 'analyze_with_gemini') {
-      const { question, files = '', template } = args;
+      const { question, files = '', context = '', template } = args;
       
       // Process file patterns from user input
       const patterns = processFilePatterns(files);
@@ -249,7 +265,7 @@ No file patterns specified. To use Gemini's massive context effectively, first e
       
       // Assess complexity and enhance prompt
       const complexity = assessComplexity(question, patterns.length);
-      const enhancedQuestion = enhancePrompt(question, patterns, template);
+      const enhancedQuestion = enhancePrompt(question, patterns, template, context);
       
       console.error(`Analyzing with patterns: ${patterns.join(' ')}`);
       console.error(`Task complexity: ${complexity}`);
