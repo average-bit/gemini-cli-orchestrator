@@ -120,6 +120,9 @@ We welcome contributions! Please see our [Contributing Guide](docs/CONTRIBUTING.
 
 ## MCP Configuration
 
+### 🚨 Important Note for Existing Users
+If you've previously installed this MCP server (especially if you used `gemini-orchestrator.mjs`), you may have cached configurations. The filename was renamed to `gemini-collaboration-guide.mjs` for clarity. **See "Handling Previous Installations" below** if you encounter setup issues.
+
 ### Claude Code CLI (Recommended)
 The easiest and most reliable way to configure the MCP server:
 
@@ -138,6 +141,28 @@ claude mcp list
 - Use the full absolute path to the `gemini-collaboration-guide.mjs` file
 - The server name must be exactly `gemini-collaboration-guide`
 - Restart Claude Code after adding the server
+
+### Handling Previous Installations / Filename Changes
+
+If you previously configured this MCP server or encounter issues like "Status: ✘ failed", follow these steps:
+
+```bash
+# 1. Remove any old configurations
+claude mcp remove gemini-cli-orchestrator    # Old name
+claude mcp remove gemini-orchestrator        # Another old name  
+claude mcp remove gemini-collaboration-guide # Clean slate
+
+# 2. Verify clean state
+claude mcp list
+
+# 3. Add with correct filename (use YOUR actual path)
+claude mcp add gemini-collaboration-guide node /Users/dannynguyen/gemini-cli-orchestrator/gemini-collaboration-guide.mjs
+
+# 4. Restart Claude Code completely
+
+# 5. Test it works
+/mcp
+```
 
 ### Manual Configuration (Alternative)
 
@@ -183,24 +208,45 @@ If you prefer manual JSON configuration:
 
 ### Troubleshooting
 
-If `/mcp` shows "No MCP servers configured":
+**If `/mcp` shows "No MCP servers configured" or tools aren't available:**
 
-1. **Use the CLI command** - Manual JSON editing can be error-prone
+1. **Check for filename/configuration conflicts** (Most Common Issue)
+   - Follow the "Handling Previous Installations" section above
+   - The file was renamed from `gemini-orchestrator.mjs` to `gemini-collaboration-guide.mjs`
+
+2. **Clean setup process**:
    ```bash
-   claude mcp add gemini-collaboration-guide node /path/to/your/gemini-cli-orchestrator/gemini-collaboration-guide.mjs
+   # Remove all old configurations
+   claude mcp remove gemini-cli-orchestrator
+   claude mcp remove gemini-orchestrator  
+   claude mcp remove gemini-collaboration-guide
+   
+   # Add with correct filename
+   claude mcp add gemini-collaboration-guide node /absolute/path/to/gemini-collaboration-guide.mjs
    ```
 
-2. **Check the exact server name** - Must be `gemini-collaboration-guide` (not `gemini-cli-orchestrator`)
-
-3. **Verify the file path** - Use absolute path and ensure the file exists
-
-4. **Restart Claude Code** completely after configuration changes
-
-5. **Test with commands**:
+3. **Verify the file exists**:
    ```bash
-   claude mcp list    # Should show your server
-   /mcp              # Should show available tools in Claude Code
+   ls -la /path/to/your/gemini-cli-orchestrator/gemini-collaboration-guide.mjs
    ```
+
+4. **Test the server can start**:
+   ```bash
+   node /path/to/your/gemini-cli-orchestrator/gemini-collaboration-guide.mjs --help
+   ```
+
+5. **Restart Claude Code** completely after any configuration changes
+
+6. **Verify success**:
+   ```bash
+   claude mcp list    # Should show: gemini-collaboration-guide
+   /mcp              # Should show the four tools
+   ```
+
+**Common Errors:**
+- `Status: ✘ failed` → Usually wrong filename (use `gemini-collaboration-guide.mjs`)
+- `File does not exist` → Check absolute path is correct
+- Tools not appearing → Restart Claude Code after configuration
 
 ## Advanced Usage Examples
 
