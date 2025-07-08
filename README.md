@@ -108,6 +108,12 @@ gemini_synthesize_findings steps_summary="Analyzed 3 auth mechanisms, found 2 is
 ✅ **Flexible Workflows** - Adapt your approach based on what you discover  
 ✅ **Direct Gemini Integration** - No wrapper complexity or auth overhead
 
+## 📚 Documentation
+
+- **[How It Works](docs/HOW_IT_WORKS.md)** - Deep dive into the architecture and metaprompting philosophy
+- **[Contributing Guide](docs/CONTRIBUTING.md)** - How to contribute to the project
+- **[Code of Conduct](CODE_OF_CONDUCT.md)** - Community standards and expectations
+
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guide](docs/CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md) for details on how to get involved.  
