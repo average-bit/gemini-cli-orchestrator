@@ -300,23 +300,51 @@ ${context ? `
 
 ### Context-Optimized Command Patterns
 
-**For Maximum Context Utilization:**
+**Native Gemini CLI Syntax (Recommended):**
+
+The \`@\` syntax is cleaner, more efficient, and native to Gemini CLI:
+- **Simpler commands**: No need for \`cat\` or \`find\` pipes
+- **Better performance**: Native file handling by Gemini CLI
+- **Clearer intent**: Directly specify what you want to analyze
+- **Path flexibility**: Relative to your current working directory
+
 \`\`\`bash
-# Aggregate complete subsystems (leverage 1M+ token window with Gemini 2.5 Flash)
-cat src/auth/**/* middleware/auth* config/auth* | gemini -m gemini-2.5-flash -p "${step_description} - analyze the complete authentication subsystem"
+# Single file analysis
+gemini -m gemini-2.5-flash -p "@src/auth/middleware.js ${step_description}"
 
-# With GEMINI.md context for persistent project understanding
-cat GEMINI.md src/auth/**/* | gemini -m gemini-2.5-flash -p "Given this project context, ${step_description}"
+# Multiple specific files  
+gemini -m gemini-2.5-flash -p "@package.json @src/auth/index.js @middleware/auth.js ${step_description}"
 
-# Repository filtering for massive codebases
-find . -name "*.js" -path "./src/*" -not -path "*/node_modules/*" | head -50 | xargs cat | gemini -m gemini-2.5-flash -p "${step_description}"
+# Entire directory (leverage 1M+ token window)
+gemini -m gemini-2.5-flash -p "@src/auth/ ${step_description} - analyze the complete authentication subsystem"
+
+# Multiple directories for cross-cutting analysis
+gemini -m gemini-2.5-flash -p "@src/ @tests/ @middleware/ ${step_description}"
+
+# Whole project overview
+gemini --all_files -m gemini-2.5-flash -p "${step_description} - analyze the entire project"
+
+# Current directory and subdirectories
+gemini -m gemini-2.5-flash -p "@./ ${step_description}"
 \`\`\`
 
-**Smart File Selection:**
+**Implementation Verification Patterns:**
 \`\`\`bash
-# Use Glob tool first to discover optimal file patterns
-# Then execute context-aware collaboration command with Gemini 2.5 Flash
-cat $(glob 'src/auth/**/*.{js,ts}' 'middleware/auth*' 'config/auth*') | gemini -m gemini-2.5-flash -p "Your focused analysis prompt"
+# Check if a feature exists
+gemini -m gemini-2.5-flash -p "@src/ @lib/ Has ${step_description} been implemented? Show relevant files and functions"
+
+# Verify security measures
+gemini -m gemini-2.5-flash -p "@src/ @api/ Are proper security measures implemented for ${step_description}? Show examples"
+
+# Check test coverage
+gemini -m gemini-2.5-flash -p "@src/ @tests/ Is ${step_description} fully tested? List all test cases"
+\`\`\`
+
+**Traditional Shell Methods (Alternative):**
+\`\`\`bash
+# If you prefer traditional commands
+cat src/auth/**/* | gemini -m gemini-2.5-flash -p "${step_description}"
+find . -name "*.js" -path "./src/*" | head -20 | xargs cat | gemini -m gemini-2.5-flash -p "${step_description}"
 \`\`\`
 
 **Model Selection Guidance:**
