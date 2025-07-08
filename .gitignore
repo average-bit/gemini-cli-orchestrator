@@ -26,6 +26,7 @@ ehthumbs.db
 # IDE files
 .vscode/
 .idea/
+.ide-configs/
 *.swp
 *.swo
 

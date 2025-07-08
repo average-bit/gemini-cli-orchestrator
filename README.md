@@ -143,7 +143,7 @@ If you prefer manual JSON configuration:
   "mcpServers": {
     "gemini-collaboration-guide": {
       "command": "node",
-      "args": ["/path/to/your/gemini-cli-orchestrator/gemini-collaboration-guide.mjs"]
+      "args": ["/absolute/path/to/your/gemini-cli-orchestrator/gemini-collaboration-guide.mjs"]
     }
   }
 }
@@ -155,7 +155,21 @@ If you prefer manual JSON configuration:
   "mcpServers": {
     "gemini-collaboration-guide": {
       "command": "node",
-      "args": ["/path/to/your/gemini-cli-orchestrator/gemini-collaboration-guide.mjs"]
+      "args": ["/absolute/path/to/your/gemini-cli-orchestrator/gemini-collaboration-guide.mjs"]
+    }
+  }
+}
+```
+
+**Windsurf IDE** - Config file: `windsurf_config.json`
+```json
+{
+  "mcpServers": {
+    "gemini-collaboration-guide": {
+      "command": "node",
+      "args": ["/absolute/path/to/your/gemini-cli-orchestrator/gemini-collaboration-guide.mjs"],
+      "disabled": false,
+      "alwaysAllow": []
     }
   }
 }
