@@ -1,346 +1,278 @@
-# Gemini CLI Orchestrator MCP
+# Gemini CLI Orchestrator v2.0 - Sequential Thinking MCP
 
-A lightweight CLI tool and MCP server enabling AI agents to perform deep codebase analysis with Gemini's massive context window.
+A metaprompting-first MCP server that guides AI agents through intelligent, multi-step codebase analysis using Google's Gemini AI.
 
-## 🚀 Getting Started
+## 🧠 Core Philosophy
 
-**Step 1:** Install Gemini CLI
+**Don't build intelligence into the system. Build prompts that elicit intelligence from the agent.**
+
+This tool doesn't wrap or replace your thinking - it guides you to think more systematically about complex codebase analysis through structured workflows.
+
+## 🚀 Quick Start
+
+**Step 1: Install Gemini CLI**
 ```bash
 npm install -g @google/gemini-cli
 ```
 
-**Step 2:** Install this tool
+**Step 2: Authenticate (one-time setup)**
+```bash
+gemini auth login
+```
+
+**Step 3: Install this tool**
 ```bash
 npm install
 ```
 
-**Step 3:** Test it works
+**Step 4: Test it works**
 ```bash
-npm run analyze "What does this code do?"
+node gemini-collaboration-guide.mjs
 ```
 
-That's it! Authentication happens automatically on first use.
-
-## Two Ways to Use
-
-### 🚀 MCP Server (Recommended for Agents)
-**Makes this tool available to any AI agent via Model Context Protocol**
-
+**Step 5: Try your first analysis** (using Claude Code CLI)
 ```bash
-# Install dependencies
-npm install
+# Start with planning a simple analysis
+gemini_plan_analysis goal="Understand this project's main architecture"
+
+# Then craft a specific prompt for the first step
+gemini_craft_prompt step_description="Analyze package.json and README for project overview" context="Starting fresh analysis"
 ```
 
-## MCP Configuration by IDE
-
-### Claude Code CLI
-```bash
-# Quick setup
-claude mcp add gemini-cli-orchestrator node /path/to/your/gemini-cli-orchestrator/mcp-server.mjs
-
-# Or edit ~/.claude/settings.local.json:
-{
-  "permissions": {
-    "allow": ["mcp__gemini-cli-orchestrator__analyze_with_gemini"]
-  },
-  "mcpServers": {
-    "gemini-cli-orchestrator": {
-      "command": "node",
-      "args": ["/path/to/your/gemini-cli-orchestrator/mcp-server.mjs"]
-    }
-  }
-}
-```
-
-### Claude Desktop
-**Config file locations:**
-- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
-
-```json
-{
-  "mcpServers": {
-    "gemini-cli-orchestrator": {
-      "command": "node",
-      "args": ["/path/to/your/gemini-cli-orchestrator/mcp-server.mjs"]
-    }
-  }
-}
-```
-
-### Cursor IDE
-**Config file:** `.cursor/mcp.json` (project) or `~/.cursor/mcp.json` (global)
-
-```json
-{
-  "mcpServers": {
-    "gemini-cli-orchestrator": {
-      "command": "node",
-      "args": ["/path/to/your/gemini-cli-orchestrator/mcp-server.mjs"]
-    }
-  }
-}
-```
-
-### Windsurf IDE
-**Config file:** `~/.codeium/windsurf/mcp_config.json`
-
-```json
-{
-  "mcpServers": {
-    "gemini-cli-orchestrator": {
-      "command": "node",
-      "args": ["/path/to/your/gemini-cli-orchestrator/mcp-server.mjs"],
-      "disabled": false
-    }
-  }
-}
-```
-
-**📁 Quick Setup:** Copy example configs from `.ide-configs/` directory
-
-**Any agent can now use:**
-- `analyze_with_gemini("find security issues", "@src/auth/ @middleware/")` 
-- Intelligent file selection guided by tool description
-- Cross-file analysis with Gemini's massive context window
-
-### 💻 Direct CLI (For Scripts/Power Users)  
-**Ultra-simple direct usage**
-
-## Quick Start
-
-```bash
-# Install
-npm install
-
-# Basic usage
-npm run analyze "What does this code do?" @src/main.js
-
-# Templates
-npm run analyze --template security @src/ @package.json
-
-# Verification (Reddit-style)  
-npm run analyze "Is JWT auth implemented?" @src/auth/
-
-# Semantic keywords (NEW!)
-npm run analyze "Review authentication security" @authentication
-```
-
-## Features
-
-✅ **@ syntax file inclusion** - `@src/` `@**/*.js` `@package.json`  
-✅ **Semantic keywords** - `@authentication` `@database` `@config` (via .gemini-direct.json)  
-✅ **5 core templates** - security, architecture, performance, quality, debug  
-✅ **Direct Gemini calls** - no MCP overhead  
-✅ **Zero configuration** - works immediately  
-✅ **Single dependency** - just `glob`  
-
-## Examples
-
-```bash
-# File analysis
-npm run analyze "Explain this code" @src/main.js
-
-# Directory analysis  
-npm run analyze "Review architecture" @src/
-
-# Multiple files
-npm run analyze "Compare these" @src/old.js @src/new.js
-
-# Security audit
-npm run analyze --template security @src/ @package.json
-
-# Verification questions
-npm run analyze "Is error handling robust?" @src/ @api/
-npm run analyze "Are WebSocket hooks present?" @src/hooks/
-npm run analyze "Is dark mode implemented?" @src/ @styles/
-```
+That's it! Authentication is handled automatically by the gemini CLI.
 
 ## How It Works
 
-The tool has two components:
-- **CLI Tool** (`gemini-direct.mjs`): Aggregates files using @ syntax and sends to Gemini CLI
-- **MCP Server** (`mcp-server.mjs`): Makes the CLI tool available to AI agents via standard protocol
+Instead of trying to be "smart" about your analysis, this tool provides four simple tools that guide you through systematic analysis:
 
-File patterns like `@src/` expand to include multiple files in a single Gemini analysis request.
+### 🎯 `gemini_plan_analysis(goal)`
+Breaks down complex analysis goals into a step-by-step plan. Be specific about what you want to understand and why.
+
+**Example:** 
+```bash
+gemini_plan_analysis goal="Audit authentication system for security vulnerabilities"
+```
+
+### 🔍 `gemini_craft_prompt(step_description, context)`
+Helps you write better prompts for Gemini by suggesting effective commands and context for each analysis step.
+
+**Example:** 
+```bash
+gemini_craft_prompt step_description="Analyze JWT token handling" context="Found 3 auth endpoints, focusing on token security"
+```
+
+### 🔄 `gemini_iterate_analysis(current_understanding, iteration_goal)`
+Guide iterative analysis using observe-think-act cycles for dynamic problem-solving.
+
+**Example:** 
+```bash
+gemini_iterate_analysis current_understanding="Found potential SQL injection in login" iteration_goal="Investigate if other endpoints have similar issues"
+```
+
+### 📊 `gemini_synthesize_findings(steps_summary, synthesis_goal)`
+Combine insights from multiple analysis steps into comprehensive understanding.
+
+**Example:** 
+```bash
+gemini_synthesize_findings steps_summary="Analyzed auth system, found 2 vulnerabilities, tested 5 endpoints" synthesis_goal="Create security audit report with prioritized fixes"
+```
+
+## Example Workflow
+
+Here's how you'd conduct a security audit using the orchestrator:
+
+```bash
+# 1. Plan the overall analysis
+gemini_plan_analysis goal="Analyze authentication system for security vulnerabilities"
+# → Outputs: 5-stage analysis plan with specific steps
+
+# 2. Execute each planned step
+gemini_craft_prompt step_description="Identify authentication mechanisms" context="Security audit of auth system"
+# → Outputs: Optimized gemini command to analyze auth files
+# → You run: cat src/auth/**/* | gemini -m gemini-2.5-flash -p "..."
+
+# 3. Dive deeper if needed
+gemini_iterate_analysis current_understanding="Found JWT + session auth" iteration_goal="Check for common auth vulnerabilities"
+# → Outputs: ReAct loop guidance for systematic vulnerability testing
+
+# 4. Synthesize final report
+gemini_synthesize_findings steps_summary="Analyzed 3 auth mechanisms, found 2 issues" synthesis_goal="Security audit report with fixes"
+# → Outputs: Comprehensive synthesis strategy for final report
+```
+
+## 🎯 Key Benefits
+
+✅ **Simplified Authentication** - Uses your existing gemini CLI setup  
+✅ **True Metaprompting** - Guides your intelligence, doesn't replace it  
+✅ **Multi-Step Analysis** - Break complex problems into manageable steps  
+✅ **Flexible Workflows** - Adapt your approach based on what you discover  
+✅ **Direct Gemini Integration** - No wrapper complexity or auth overhead
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](docs/CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md) for details on how to get involved.  
+
+## MCP Configuration
+
+### Claude Code CLI (Recommended)
+The easiest and most reliable way to configure the MCP server:
+
+```bash
+# Add the server using Claude Code's built-in command
+claude mcp add gemini-collaboration-guide node /path/to/your/gemini-cli-orchestrator/gemini-collaboration-guide.mjs
+
+# Verify it was added
+claude mcp list
+
+# Test it's working in Claude Code
+/mcp
+```
+
+**Important:** 
+- Use the full absolute path to the `gemini-collaboration-guide.mjs` file
+- The server name must be exactly `gemini-collaboration-guide`
+- Restart Claude Code after adding the server
+
+### Manual Configuration (Alternative)
+
+If you prefer manual JSON configuration:
+
+**Claude Desktop** - Config file: `~/Library/Application Support/Claude/claude_desktop_config.json`
+```json
+{
+  "mcpServers": {
+    "gemini-collaboration-guide": {
+      "command": "node",
+      "args": ["/path/to/your/gemini-cli-orchestrator/gemini-collaboration-guide.mjs"]
+    }
+  }
+}
+```
+
+**Cursor IDE** - Config file: `.cursor/mcp.json`
+```json
+{
+  "mcpServers": {
+    "gemini-collaboration-guide": {
+      "command": "node",
+      "args": ["/path/to/your/gemini-cli-orchestrator/gemini-collaboration-guide.mjs"]
+    }
+  }
+}
+```
+
+### Troubleshooting
+
+If `/mcp` shows "No MCP servers configured":
+
+1. **Use the CLI command** - Manual JSON editing can be error-prone
+   ```bash
+   claude mcp add gemini-collaboration-guide node /path/to/your/gemini-cli-orchestrator/gemini-collaboration-guide.mjs
+   ```
+
+2. **Check the exact server name** - Must be `gemini-collaboration-guide` (not `gemini-cli-orchestrator`)
+
+3. **Verify the file path** - Use absolute path and ensure the file exists
+
+4. **Restart Claude Code** completely after configuration changes
+
+5. **Test with commands**:
+   ```bash
+   claude mcp list    # Should show your server
+   /mcp              # Should show available tools in Claude Code
+   ```
+
+## Advanced Usage Examples
+
+### Security Audit Workflow
+```
+1. Start: "Comprehensive security audit of web application"
+2. Step 1: "Identify all authentication mechanisms" → @src/auth/ @middleware/
+3. Step 2: "Analyze API endpoint security" → @src/api/ @src/routes/
+4. Step 3: "Review data validation and sanitization" → @src/validation/ @src/models/
+5. Step 4: "Check for common vulnerabilities (OWASP)" → @src/
+6. Conclude: "Generate prioritized security report with remediation steps"
+```
+
+### Performance Analysis Workflow
+```
+1. Start: "Identify performance bottlenecks in React application"
+2. Step 1: "Analyze component rendering patterns" → @src/components/
+3. Step 2: "Review state management efficiency" → @src/store/ @src/hooks/
+4. Step 3: "Check for unnecessary re-renders" → @src/components/
+5. Step 4: "Analyze bundle size and imports" → @package.json @webpack.config.js
+6. Conclude: "Provide performance optimization recommendations"
+```
+
+### Architecture Review Workflow
+```
+1. Start: "Review microservices architecture for scalability"
+2. Step 1: "Understand service boundaries" → @services/ @docker-compose.yml
+3. Step 2: "Analyze inter-service communication" → @src/api/ @src/clients/
+4. Step 3: "Review data flow and dependencies" → @src/models/ @src/schemas/
+5. Step 4: "Evaluate error handling and resilience" → @src/middleware/ @src/utils/
+6. Conclude: "Recommend architectural improvements for scalability"
+```
+
+## File Pattern Examples
+
+Use glob patterns to focus analysis on relevant files:
+
+```bash
+# Language-specific patterns
+@**/*.js @**/*.ts          # JavaScript/TypeScript
+@**/*.py                   # Python
+@**/*.go                   # Go
+@**/*.rs                   # Rust
+@**/*.java                 # Java
+
+# Framework-specific patterns
+@src/components/ @src/hooks/     # React
+@src/models/ @src/views/         # MVC frameworks
+@src/services/ @src/controllers/ # Service layer
+
+# File type patterns
+@package.json @*.config.js       # Configuration
+@**/*.test.js @**/*.spec.js      # Tests
+@README.md @docs/                # Documentation
+```
 
 ## Requirements
 
 - Node.js 18+
-- Google Gemini CLI installed and authenticated (see setup below)
-
-## ⚡ Quick Setup Check
-
-```bash
-# 1. Check if Gemini CLI is installed
-gemini --version
-
-# 2. Test authentication (will prompt if needed)
-echo "Hello" | gemini
-
-# 3. Install this tool
-npm install
-
-# 4. Test the tool
-npm run analyze "What does this code do?"
-```
-
-## Setup
-
-### 1. Install Gemini CLI
-
-```bash
-# Install the official Google Gemini CLI
-npm install -g @google/gemini-cli
-```
-
-### 2. Authenticate with Google (OAuth - FREE)
-
-The Gemini CLI uses OAuth authentication. **No explicit auth command needed** - authentication happens automatically on first use.
-
-```bash
-# Test authentication (will prompt for login if needed)
-echo "Hello Gemini" | gemini
-```
-
-**First Run:** If not authenticated, Gemini CLI will automatically open your browser for OAuth login.
-
-**What Gets Created:**
-```
-~/.gemini/
-├── settings.json          # {"selectedAuthType": "oauth-personal"}
-├── oauth_creds.json       # OAuth tokens (auto-refreshed)
-├── user_id               # Your unique identifier
-└── google_account_id     # Google account reference
-```
-
-**How It Works:**
-1. **First time**: Any `gemini` command opens browser for OAuth
-2. **Subsequent calls**: Gemini CLI automatically uses stored tokens
-3. **Token refresh**: Happens automatically when needed
-4. **Your tool**: Inherits authentication from Gemini CLI
-
-**Cross-Platform Paths:**
-| OS | Auth Directory |
-|---|---|
-| **Linux/macOS** | `~/.gemini/` |
-| **Windows** | `%USERPROFILE%\.gemini\` |
-| **Docker** | Mount host `~/.gemini/` as volume |
-
-Uses Google OAuth authentication (personal Google account).
-
-### 3. Verify Authentication
-
-```bash
-# Test that authentication works
-echo "Hello Gemini" | gemini
-# You should see a response from Gemini
-```
-
-### 4. Install and Test This Tool
-
-```bash
-# Clone or download this project
-git clone <repository-url>
-cd gemini-cli-orchestrator
-
-# Install dependencies
-npm install
-
-# Test the tool
-npm run analyze "What is 2+2?"
-```
-
-## Authentication Details
-
-**No Code Changes Needed** - Your tool automatically inherits authentication because:
-
-```javascript
-// Spawns gemini CLI with full environment
-const child = spawn(geminiPath, ['-m', 'gemini-2.5-flash'], {
-  stdio: ['pipe', 'pipe', 'pipe'],
-  env: { ...process.env }  // ← Passes through all environment
-});
-```
-
-The Gemini CLI handles reading `~/.gemini/oauth_creds.json` automatically.
-
-Authentication is handled by the Gemini CLI, so the tool inherits existing credentials automatically.
+- Google Gemini CLI installed and authenticated
+- Basic understanding of glob patterns
 
 ## Troubleshooting
 
-### "Command not found: gemini"
+**"Command not found: gemini"**
 ```bash
-# Check if Gemini CLI is installed
-npm list -g @google/gemini-cli
-
-# If not installed, install it
 npm install -g @google/gemini-cli
 ```
 
-### "Authentication failed"
+**"Authentication failed"**
 ```bash
-# Test authentication (will re-prompt if needed)
-echo "test" | gemini
-
-# If still failing, check if ~/.gemini/ directory exists
-ls -la ~/.gemini/
+gemini auth login
 ```
 
-### "GEMINI_CLI_PATH not found"
-The tool automatically finds the Gemini CLI. If you have issues:
-
+**"No files found"**
 ```bash
-# Find where Gemini is installed
-which gemini
-
-# Set environment variable if needed (optional)
-export GEMINI_CLI_PATH=$(which gemini)
+# Check your file patterns match your project structure
+# Use broader patterns like @src/ or @**/*.js
 ```
 
-## Templates
+## What's New in v2.0
 
-- **security** - OWASP-style security audit
-- **architecture** - System design and patterns analysis
-- **performance** - Bottleneck identification and optimization
-- **quality** - Code quality and best practices review  
-- **debug** - Bug identification and troubleshooting
+🎉 **Complete architectural redesign** - From complex wrapper to simple orchestrator  
+🎉 **Eliminated authentication complexity** - Uses native gemini CLI auth  
+🎉 **True metaprompting approach** - Guides intelligence instead of replacing it  
+🎉 **Sequential thinking workflows** - Multi-step analysis with state management  
+🎉 **Simplified setup** - No complex configuration or environment variables  
 
-## Semantic Keywords
+## Philosophy
 
-Create a `.gemini-direct.json` file in your project root to define semantic keywords that map to file patterns:
+This tool embodies the metaprompting principle: **trust agent intelligence over system complexity**.
 
-```json
-{
-  "aliases": {
-    "authentication": ["src/auth/**/*", "middleware/auth*", "**/*auth*"],
-    "database": ["src/models/**/*", "src/db/**/*", "**/*model*"],
-    "api": ["src/api/**/*", "src/routes/**/*", "**/*controller*"],
-    "config": ["*.config.*", ".env*", "package.json"],
-    "tests": ["test/**/*", "**/*.test.*", "**/*.spec.*"]
-  },
-  "limits": {
-    "maxFiles": 30,
-    "maxCharsPerFile": 8000
-  }
-}
-```
+Instead of trying to be smart about your analysis, it provides simple tools that guide you to think systematically about complex problems. The result is more thoughtful analysis and better insights.
 
-Usage:
-```bash
-# Instead of guessing project structure
-npm run analyze "security audit" @authentication @config
-
-# Works across any project type (JavaScript, Python, Go, etc.)
-npm run analyze "find database issues" @database
-```
-
-## Distribution
-
-This tool is designed to be:
-- **Copied** - 3 files, copy anywhere
-- **Shared** - Send to colleagues, zero setup
-- **Embedded** - Drop into any project
-- **Global** - `npm install -g` for system-wide use
-
-Perfect for getting real value from Gemini's massive context window without the complexity overhead.
+Perfect for leveraging Gemini's massive context window through intelligent, structured workflows.

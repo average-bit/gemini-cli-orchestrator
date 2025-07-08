@@ -4,7 +4,7 @@ dist/
 
 # Logs
 *.log
-npm-debug.log*
+npm-debug.log
 
 # Environment variables (user-specific)
 .env
@@ -38,3 +38,6 @@ pids
 *.pid
 *.seed
 *.pid.lock
+
+# Test coverage (if tests are added later)
+coverage/

@@ -1,0 +1,18 @@
+{
+  "aliases": {
+    "testfiles": [
+      "test-file.txt"
+    ]
+  },
+  "limits": {
+    "maxFiles": 30,
+    "maxCharsPerFile": 8000
+  },
+  "ignore": [
+    "**/node_modules/**"
+  ],
+  "model": {
+    "model": "gemini-1.5-pro",
+    "timeout": 180000
+  }
+}

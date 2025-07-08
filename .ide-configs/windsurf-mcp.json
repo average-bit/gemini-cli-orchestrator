@@ -1,8 +1,8 @@
 {
   "mcpServers": {
-    "gemini-cli-orchestrator": {
+    "gemini-collaboration-guide": {
       "command": "node",
-      "args": ["/path/to/your/gemini-cli-orchestrator/mcp-server.mjs"],
+      "args": ["/Users/dannynguyen/gemini-cli-orchestrator/gemini-collaboration-guide.mjs"],
       "disabled": false,
       "alwaysAllow": []
     }

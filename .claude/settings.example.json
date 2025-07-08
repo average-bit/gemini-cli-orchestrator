@@ -1,16 +1,18 @@
 {
   "permissions": {
     "allow": [
-      "mcp__gemini-cli-orchestrator__analyze_with_gemini",
-      "mcp__gemini-cli-orchestrator__discover_files"
+      "mcp__gemini-collaboration-guide__gemini_guide_analysis_workflow",
+      "mcp__gemini-collaboration-guide__gemini_guide_collaboration_step",
+      "mcp__gemini-collaboration-guide__gemini_guide_insight_synthesis",
+      "mcp__gemini-collaboration-guide__gemini_guide_react_loop"
     ],
     "deny": []
   },
   "mcpServers": {
-    "gemini-cli-orchestrator": {
+    "gemini-collaboration-guide": {
       "command": "node",
       "args": [
-        "/path/to/your/gemini-cli-orchestrator/mcp-server.mjs"
+"/Users/dannynguyen/gemini-cli-orchestrator/gemini-collaboration-guide.mjs"
       ]
     }
   }

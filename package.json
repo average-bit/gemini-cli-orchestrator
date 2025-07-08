@@ -1,21 +1,25 @@
 {
   "name": "gemini-cli-orchestrator",
-  "version": "1.1.0",
-  "description": "Ultra-simple CLI and MCP server that orchestrates Gemini for AI agent codebase analysis",
-  "type": "module",
-  "main": "gemini-direct.mjs",
-  "bin": {
-    "gemini-analyze": "./gemini-direct.mjs"
+  "version": "2.1.0",
+  "description": "Pure metaprompting MCP server that guides AI agents on how to collaborate with Gemini CLI - no execution logic, only intelligent guidance",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dnnyngyen/gemini-cli-orchestrator.git"
   },
+  "bugs": {
+    "url": "https://github.com/dnnyngyen/gemini-cli-orchestrator/issues"
+  },
+  "homepage": "https://github.com/dnnyngyen/gemini-cli-orchestrator#readme",
+  "type": "module",
+  "main": "gemini-collaboration-guide.mjs",
   "scripts": {
-    "analyze": "node gemini-direct.mjs",
-    "mcp": "node mcp-server.mjs",
+    "start": "node gemini-collaboration-guide.mjs",
+    "mcp": "node gemini-collaboration-guide.mjs",
     "build": "echo 'No build needed - pure JavaScript'",
-    "start": "node mcp-server.mjs"
+    "test": "echo 'Pure metaprompting system - no execution logic to test'"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.15.0",
-    "glob": "^10.3.0"
+    "@modelcontextprotocol/sdk": "^1.15.0"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -23,12 +27,14 @@
   "keywords": [
     "gemini",
     "ai",
-    "code-analysis",
-    "cli",
-    "orchestrator",
+    "metaprompting",
+    "collaboration-guide",
+    "pure-guidance",
     "claude",
     "mcp",
-    "agent"
+    "agent",
+    "teacher",
+    "intelligence-amplification"
   ],
   "author": "Gemini CLI Orchestrator Contributors",
   "license": "MIT"
