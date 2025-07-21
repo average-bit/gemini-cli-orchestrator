@@ -81,10 +81,21 @@ If you discover a security vulnerability, please report it by:
 - **Network Attacks**: No server-side network connections
 
 ### Threats Outside Our Scope
+- **Prompt Injection**: Users should be aware of prompt injection risks
 - **Client-Side Security**: Agent security is user's responsibility
 - **Gemini API Security**: Managed by Google
 - **Network Security**: User's network infrastructure
 - **File System Security**: Agent's file access permissions
+
+## Prompt Injection Risk
+
+This server generates prompts that are executed by the Gemini CLI. Maliciously crafted inputs to this server's tools could generate prompts that cause unintended and harmful behavior.
+
+### Mitigation Strategies
+- **Input Sanitization**: Sanitize and validate all inputs to this server's tools
+- **Least Privilege**: Run the Gemini CLI with the minimum required permissions
+- **Monitoring**: Monitor Gemini API usage for unexpected activity
+- **Review Generated Prompts**: Carefully review all prompts before execution
 
 ## Compliance
 

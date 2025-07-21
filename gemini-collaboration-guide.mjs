@@ -150,6 +150,31 @@ You execute the synthesis commands yourself using your bash tools.`,
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
   
+  // Prompt injection mitigation: check for keywords
+  const injectionKeywords = ['ignore', 'confidential', 'secret', 'delete', 'destroy', 'harmful'];
+  for (const key in args) {
+    if (typeof args[key] === 'string') {
+      const lowerCaseArg = args[key].toLowerCase();
+      for (const keyword of injectionKeywords) {
+        if (lowerCaseArg.includes(keyword)) {
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `⚠️ **Potential Prompt Injection Detected**
+
+Your input contains the keyword "${keyword}", which could be used for prompt injection. For security, this request has been blocked.
+
+Please review your input and remove any sensitive or malicious-sounding terms. If you believe this is a false positive, please contact support.`
+              }
+            ],
+            isError: true
+          };
+        }
+      }
+    }
+  }
+
   try {
     if (name === 'gemini_plan_analysis') {
       const { goal } = args;
