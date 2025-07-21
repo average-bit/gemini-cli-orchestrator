@@ -114,6 +114,10 @@ gemini_synthesize_findings steps_summary="Analyzed 3 auth mechanisms, found 2 is
 - **[Contributing Guide](docs/CONTRIBUTING.md)** - How to contribute to the project
 - **[Code of Conduct](CODE_OF_CONDUCT.md)** - Community standards and expectations
 
+## 🔒 Security
+
+This project follows a pure metaprompting philosophy, which means it does not execute any code or access any files on its own. However, it is important to be aware of the security implications of using this tool. Please see the [SECURITY.md](SECURITY.md) file for a detailed security policy.
+
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guide](docs/CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md) for details on how to get involved.  
